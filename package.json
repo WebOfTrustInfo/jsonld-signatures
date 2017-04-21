@@ -34,6 +34,7 @@
   "main": "lib/jsonld-signatures.js",
   "dependencies": {
     "async": "^1.5.2",
+    "base64-url": "^1.3.3",
     "bitcore-message": "github:CoMakery/bitcore-message#dist",
     "commander": "~2.9.0",
     "es6-promise": "~4.0.5",

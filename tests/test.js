@@ -121,12 +121,12 @@ describe('JSON-LD Signatures', function() {
   context('with NO security context', function() {
     // the test document that will be signed
     var testDocument = {
-      '@context': {
+      '@context': ['https://w3id.org/security', {
         schema: 'http://schema.org/',
         name: 'schema:name',
         homepage: 'schema:url',
         image: 'schema:image'
-      },
+      }],
       name: 'Manu Sporny',
       homepage: 'https://manu.sporny.org/',
       image: 'https://manu.sporny.org/images/manu.png'
@@ -420,7 +420,106 @@ describe('JSON-LD Signatures', function() {
         }).then(done).catch(done);
       });
     });
+
+    describe('signing and verify RSA', function() {
+      it('should successfully sign a local document', function(done) {
+
+        testPrivateKeyPem = '-----BEGIN RSA PRIVATE KEY-----\r\n' +
+        'MIIEogIBAAKCAQEAtpS1ZmfVKVP5KofIhMBP0tSWc4qlh6fm2lrZSkuKxUjEaWjz\r\n' +
+        'ZSzs72gEIGxraWusMdoRuV54xsWRyf5KeZT0S+I5Prle3Idi3gICiO4NwvMk6JwS\r\n' +
+        'BcJWwmSLFEKyUSnB2CtfiGc0/5rQCpcEt/Dn5iM+BNn7fqpoLIbks8rXKUIj8+qM\r\n' +
+        'VqkTXsEKeKinE23t1ykMldsNaaOH+hvGti5Jt2DMnH1JjoXdDXfxvSP/0gjUYb0e\r\n' +
+        'ktudYFXoA6wekmQyJeImvgx4Myz1I4iHtkY/Cp7J4Mn1ejZ6HNmyvoTE/4OuY1uC\r\n' +
+        'eYv4UyXFc1s1uUyYtj4z57qsHGsS4dQ3A2MJswIDAQABAoIBACqdCrmcAmRi9QS4\r\n' +
+        'LFTPjdHnTDYrZfcDeR39ljmA6CKjmTQBCs3SbnpyDISEyY0RVF9ORlS9d/Lsqdo7\r\n' +
+        'P6ag3WPYqQO6wCk4cBrg3TaYWR3nIfYodwxhD17PmKZh6ryGwndxqBpt/DCsMWJH\r\n' +
+        'XRKRZ46PKyp2tfwaSbYaxcYw0YcPQ8SQcnDnR9slk8qetmRDT753iuNB9mue1uEE\r\n' +
+        'nE4H3nGag+fZtnxlGlml+blJiMWhJrRqCZ3fUROKMsCoYDe/0yu8F0ZagOFKET4h\r\n' +
+        '9gAq3VPv3C0C/SXNLtBqmSSt9Sw2znjfeUILUgnO9pN1bc8twq1aaeUwAOu7NRo/\r\n' +
+        'UpJ/ggECgYEA5BGU1c7af/5sFyfsa+onIJgo5BZu8uHvz3Uyb8OA0a+G9UPO1ShL\r\n' +
+        'YjX0wUfhZcFB7fwPtgmmYAN6wKGVce9eMAbX4PliPk3r+BcpZuPKkuLk/wFvgWAQ\r\n' +
+        '5Hqw2iEuwXLV0/e8c2gaUt/hyMC5+nFc4v0Bmv6NT6Pfry+UrK3BKWcCgYEAzPD+\r\n' +
+        'B+nrngwF+O99BHvb47XGKR7ON8JCI6JxavzIkusMXCB8rMyYW8zLs68L8JLAzWZ3\r\n' +
+        '4oMq0FPUnysBxc5nTF8Nb4BZxTZ5+9cHfoKrYTI3YWsmVW2FpCJFEjMs4NXZ28PB\r\n' +
+        'kS9b4zjfS2KhNdkmCeOYU0tJpNfwmOTI90qeUdUCgYBomvPD+SNYr24OVN5oRLZ7\r\n' +
+        'ia6/ptZuilh+s8dVYbs08agZ2GcGd3vT6OGAwSJNlI1TxVfDa7umsBHeRn6QCnUN\r\n' +
+        '3CWp51g7MWw4lw8DRRmFs5HKsHLfSRuWX/u7oJqcWbpfhXInEKl6N3uMo3DpwJMU\r\n' +
+        '/Wx+FaDk1UnkRROQ/ATrowKBgEsM9fpv75kxTf6btWyu7xe0uZzVay+ANDhYhLBp\r\n' +
+        'YgpriVszinS9eA4mMXLb58Nx+qk9nSmWX1drW7HuTffiXnHZXVI37qgKCyHu3Q+3\r\n' +
+        'SouNmDpUwvUF5qr04daIZybvKZkRVxGUBlJvwVYaCG9v1j5I2r+mEpILglB7eB0X\r\n' +
+        'dmMBAoGABocuCOEOq+oyLDALwzMXU8gOf3IL1Q1/BWwsdoANoh6i179psxgE4JXT\r\n' +
+        'oWcpXZQQqub8ngwE6uR9fpd3m6N/PL4T55vbDDyjPKmrL2ttC2gOtx9KrpPh+Z7L\r\n' +
+        'QRo4BE48nHJJrystKHfFlaH2G7JxHNgMBYVADyttN09qEoav8Os=\r\n' +
+          '-----END RSA PRIVATE KEY-----';
+
+        var testDocumentJson = JSON.stringify(testDocument);
+        jsigs.sign(testDocument, {
+          algorithm: 'RsaSignature2017',
+          privateKeyPem: testPrivateKeyPem,
+          creator: testPublicKeyUrl
+        }, function(err, signedDocument) {
+          console.log(signedDocument);
+          assert.ifError(err);
+          assert.notEqual(
+            signedDocument['https://w3id.org/security#signature'], undefined,
+            'signature was not created');
+          assert.equal(
+            signedDocument['https://w3id.org/security#signature']
+              ['http://purl.org/dc/terms/creator']['@id'], testPublicKeyUrl,
+            'creator key for signature is wrong');
+          testDocumentSigned = signedDocument;
+          done();
+        });
+      });
+
+      it('should successfully verify a local signed document', function(done) {
+        jsigs.verify(testDocumentSigned, {
+          publicKey: testPublicKey,
+          publicKeyOwner: testPublicKeyOwner
+        }, function(err, verified) {
+          assert.ifError(err);
+          assert.equal(verified, true, 'signature verification failed');
+          done();
+        });
+      });
+
+      it('should successfully sign a local document w/promises API', function(done) {
+        jsigs.promises.sign(testDocument, {
+          algorithm: 'RsaSignature2017',
+          privateKeyPem: testPrivateKeyPem,
+          creator: testPublicKeyUrl
+        }).then(function(signedDocument) {
+          assert.notEqual(
+            signedDocument['https://w3id.org/security#signature'], undefined,
+            'signature was not created');
+          assert.equal(
+            signedDocument['https://w3id.org/security#signature']
+              ['http://purl.org/dc/terms/creator']['@id'], testPublicKeyUrl,
+            'creator key for signature is wrong');
+          testDocumentSigned = signedDocument;
+        }).catch(function(err) {
+          assert.ifError(err);
+        }).then(function() {
+          done();
+        });
+      });
+
+      it('should successfully verify a local signed document w/promises API', function(done) {
+        jsigs.promises.verify(testDocumentSigned, {
+          publicKey: testPublicKey,
+          publicKeyOwner: testPublicKeyOwner
+        }).then(function(verified) {
+          assert.equal(verified, true, 'signature verification failed');
+        }).catch(function(err) {
+          assert.ifError(err);
+        }).then(function() {
+          done();
+        });
+      });
+    });
   });
+
+
 
   context('with security context', function() {
     // the test document that will be signed
