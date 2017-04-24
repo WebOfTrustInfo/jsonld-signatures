@@ -11,6 +11,10 @@ See [jsonld-signatures](https://github.com/digitalbazaar/jsonld-signatures) repo
 
 Highly experimental, incomplete, and not ready for production use! Use at your own risk! Pull requests welcome.
 
+### Test case
+
+See `signing and verify RSA`
+
 ### About
 
 Rebooting Web-of-Trust - http://www.weboftrust.info/
