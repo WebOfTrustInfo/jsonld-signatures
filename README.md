@@ -9,6 +9,8 @@ Built during [Rebooting Web-of-Trust](http://www.weboftrust.info/) in Paris on A
 
 See [jsonld-signatures](https://github.com/digitalbazaar/jsonld-signatures) repo for the official version and documentation. This forked repo is a work-in-progress implementation of the [2017 RSA Signature Suite](https://w3c-dvcg.github.io/lds-rsa2017/) for the Linked Data Signatures specification.
 
+See the [signature alignment abstract](https://github.com/WebOfTrustInfo/rebooting-the-web-of-trust-spring2017/blob/master/event-documents/group-abstracts/SignatureAlignmentAbstract.md).
+
 Highly experimental, incomplete, and not ready for production use! Use at your own risk! Pull requests welcome.
 
 ### Test case
